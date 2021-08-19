@@ -122,6 +122,8 @@ abstract class DataTableComponent extends Component
         }
 
         $this->filters = array_merge($this->filters, $this->baseFilters);
+
+        $this->primaryKey = $this->query()->getModel()->getKeyName();
     }
 
     /**
