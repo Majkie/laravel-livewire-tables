@@ -137,6 +137,8 @@ abstract class DataTableComponent extends Component
 
         $query = $this->query();
 
+        $query = $this->checkSelectedColumns($query);
+
         if (method_exists($this, 'applySorting')) {
             $query = $this->applySorting($query);
         }
@@ -213,7 +215,7 @@ abstract class DataTableComponent extends Component
     /**
      * Get a column object by its field
      *
-     * @param  string  $column
+     * @param string $column
      *
      * @return mixed
      */
@@ -222,5 +224,14 @@ abstract class DataTableComponent extends Component
         return collect($this->columns())
             ->where('column', $column)
             ->first();
+    }
+
+    protected function checkSelectedColumns($query)
+    {
+        if (!empty($query->getQuery()->columns) && !preg_match('~\bid\b~', $query->getQuery()->columns[0]->getValue())) {
+            $query->addSelect('id');
+        }
+
+        return $query;
     }
 }
